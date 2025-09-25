@@ -22,7 +22,7 @@ The Boolean model in Information Retrieval (IR) is a fundamental model used for 
     <p>c) For each term in the query, it retrieves documents containing that term and performs Boolean operations (AND, OR, NOT) based on the query's structure.
 
 ### Program:
-
+```
     import numpy as np
     import pandas as pd
     class BooleanRetrieval:
@@ -62,7 +62,31 @@ The Boolean model in Information Retrieval (IR) is a fundamental model used for 
         print(list(self.index.keys()))
 
     def boolean_search(self, query):
-        # TYPE YOUR CODE HERE
+      parts = query.lower().split()
+        if len(parts) == 1:
+            # Single term query
+            return self.index.get(parts[0], set())
+
+        if len(parts) == 2 and parts[0] == 'not':
+            term = parts[1]
+            term_docs = self.index.get(term, set())
+            return self.all_doc_ids - term_docs
+        if len(parts) != 3:
+            return "Invalid query format. Use 'term1 operator term2' (e.g., 'python and information')."
+
+        term1, operator, term2 = parts[0], parts[1], parts[2]
+
+        result_set1 = self.index.get(term1, set())
+        result_set2 = self.index.get(term2, set())
+
+        if operator == 'and':
+            return result_set1.intersection(result_set2)
+        elif operator == 'or':
+            return result_set1.union(result_set2)
+        elif operator == 'not':
+            return result_set1.difference(result_set2)
+        else:
+            return "Unsupported operator. Use 'and', 'or', or 'not'."
 
 if __name__ == "__main__":
     indexer = BooleanRetrieval()
@@ -86,8 +110,10 @@ if __name__ == "__main__":
         print(f"Results for '{query}': {results}")
     else:
         print("No results found for the query.")
-
+```
 
 ### Output:
+<img width="1571" height="473" alt="image" src="https://github.com/user-attachments/assets/bc44ac6d-e878-48a1-b87c-2761a3576fa6" />
 
 ### Result:
+Thus, the python program to implement Information Retrieval Using Boolean Model is executed successfully.
